@@ -31,7 +31,7 @@ public class AccountDTO implements Serializable {
     private String phoneNumber;
 
     @Schema(title = "用户角色")
-    private String uType;
+    private String utype;
 
     @Schema(title = "用户修改时间")
     protected Date updateTime;

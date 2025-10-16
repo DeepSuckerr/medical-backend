@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -81,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         // 检查uType是否有效
-        String uType = accountDTO.getUType();
+        String uType = accountDTO.getUtype();
         if (uType == null || (!"ROLE_1".equals(uType) && !"ROLE_2".equals(uType) && !"ROLE_3".equals(uType))) {
             return new JSONResult(206, "无效的用户类型", null);
         }
@@ -103,6 +104,8 @@ public class AccountServiceImpl implements AccountService {
         BeanUtils.copyProperties(accountDTO, account);
         account.setSalt(salt);
         account.setPwd(newMd5);
+        account.setCreateTime(new Date());
+        account.setUpdateTime(new Date());
 
         // 将加密之后的密码newMd5   和 salt 存储到数据库中
         // 根据用户名查找当前用户信息
