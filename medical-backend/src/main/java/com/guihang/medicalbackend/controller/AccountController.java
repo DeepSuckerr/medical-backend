@@ -18,6 +18,7 @@ public class AccountController {
 
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "登录时传入的参数可以封装到AccountDTO对象中")
+    @CrossOrigin
     public JSONResult login(@RequestBody AccountDTO accountDTO) {
         System.out.println(accountDTO);
         return accountService.login(accountDTO);

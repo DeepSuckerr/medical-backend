@@ -10,7 +10,7 @@ public class CrossOriginConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8086") // 显式指定域名
+                .allowedOrigins("http://localhost:9091") // 显式指定域名
                 .allowCredentials(true) // 允许凭证
                 .allowedMethods("*")
                 .allowedHeaders("*")

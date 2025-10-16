@@ -63,5 +63,13 @@ public class Knife4jConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi doctorApi() { // 创建了一个api接口的分组
+        return GroupedOpenApi.builder()
+                .group("医生信息模块") // 分组名称
+                .pathsToMatch("/doctor/**") // 接口请求路径规则
+                .build();
+    }
+
 
 }

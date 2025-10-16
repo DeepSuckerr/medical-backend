@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class DrugCompanyServiceImpl implements DrugCompanyService {
@@ -21,33 +22,24 @@ public class DrugCompanyServiceImpl implements DrugCompanyService {
 
     @Override
     public JSONResult getCompanyAll(String keyword, Integer currentPage, Integer pageSize) {
-        Page<DrugCompany> pa = new Page<>(currentPage, pageSize);
-        //是否模糊查询判断
-        if (keyword == null || keyword.isEmpty()) {
-            Page<DrugCompany> page = drugCompanyMapper.selectPage(pa, null);
-//            System.out.println("分页之后的数据" + page1.getRecords());
-//            System.out.println("数据的总记录数" + page1.getTotal());
-//            System.out.println("当前页码" + page1.getCurrent());
-//            System.out.println("每页的条数" + page1.getSize());
-//            System.out.println("总页数" + page1.getPages());
-            if (page.getRecords().isEmpty()) {
-                return new JSONResult(201, "暂无数据");
-            }
-            return new JSONResult(200, "查询成功", page);
-        }
-        if (currentPage > 1) {
-            currentPage = 1;
-        }
-        // 同时根据公司名、电话或ID进行模糊查询
         QueryWrapper<DrugCompany> wrapper = new QueryWrapper<>();
-        wrapper.and(i -> i.like("company_name", keyword)
-                .or().like("company_phone", keyword)
-                .or().like("company_id", keyword));
-        Page<DrugCompany> page = drugCompanyMapper.selectPage(pa, wrapper);
-        if (page.getRecords().isEmpty()) {
-            return new JSONResult(201, "药物公司信息不存在");
+        //是否模糊查询判断
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            // 同时根据公司名、电话或ID进行模糊查询
+            wrapper.and(i -> i.like("company_name", keyword)
+                    .or().like("company_phone", keyword)
+                    .or().like("company_id", keyword));
         }
-        return new JSONResult(200, "查询成功", page);
+        //是否分页查询判断
+        if (currentPage != null && pageSize != null && currentPage > 0 && pageSize > 0) {
+            Page<DrugCompany> page = new Page<>(currentPage, pageSize);
+            //两个查询都判断完后都扔到selectPage中处理得到resultPage
+            Page<DrugCompany> resultPage = drugCompanyMapper.selectPage(page, wrapper);
+            return new JSONResult(200, "查询成功", resultPage);
+        } else {
+            List<DrugCompany> companyList = drugCompanyMapper.selectList(wrapper);
+            return new JSONResult(200, "查询成功", companyList);
+        }
     }
 
     @Override
