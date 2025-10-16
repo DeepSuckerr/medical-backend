@@ -6,4 +6,6 @@ import com.guihang.medicalbackend.dto.AccountDTO;
 
 public interface AccountService {
     JSONResult login(AccountDTO accountDTO);
+
+    JSONResult register(AccountDTO accountDTO);
 }

@@ -19,6 +19,7 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/register")
                 .excludePathPatterns("/swagger-ui/**")
                 .excludePathPatterns("/webjars/**")
                 .excludePathPatterns("/v3/**")

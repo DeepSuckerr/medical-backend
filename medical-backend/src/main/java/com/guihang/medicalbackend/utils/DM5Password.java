@@ -13,5 +13,4 @@ public class DM5Password {
 //        System.out.println(md5Pwd);
         return md5Pwd;
     }
-
 }

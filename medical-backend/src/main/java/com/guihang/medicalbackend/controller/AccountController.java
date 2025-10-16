@@ -23,17 +23,18 @@ public class AccountController {
         return accountService.login(accountDTO);
     }
 
-//    @PostMapping("/register")
-//    @Operation(summary = "用户注册",description = "注册时传入的参数可以封装到AccountDTO对象中")
-//    public JSONResult register(@RequestBody AccountDTO accountDTO){
-//        System.out.println(accountDTO);
-//        return accountService.register(accountDTO);
-//    }
+    @PostMapping("/register")
+    @Operation(summary = "用户注册",description = "注册时传入的参数可以封装到AccountDTO对象中")
+    public JSONResult register(@RequestBody AccountDTO accountDTO){
+        return accountService.register(accountDTO);
+    }
 
 //    @PostMapping("/findUserByName")
 //    @Operation(summary = "根据Name查询用户",description = "查询时传入的参数可以封装到AccountDTO对象中")
 //    public JSONResult findUserByName(@RequestBody AccountDTO accountDTO){
 //        return accountService.findUserByName(accountDTO.getUname());
 //    }
+
+
 
 }
