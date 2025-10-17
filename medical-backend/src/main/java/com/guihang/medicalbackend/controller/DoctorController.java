@@ -41,6 +41,12 @@ public class DoctorController {
         return doctorService.addDoctor(doctorDTO);
     }
 
+    @PutMapping("/updateDoctor")
+    @Operation(summary = "修改医生信息", description = "修改医生信息接口")
+    public JSONResult updateDoctor(@RequestBody DoctorDTO doctorDTO) {
+        return doctorService.UpdateDoctor(doctorDTO);
+    }
+
 
 
 }

@@ -85,8 +85,75 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @Transactional
     public JSONResult UpdateDoctor(DoctorDTO doctorDTO) {
-        return null;
+        // 1. 验证传入的ID是否有效
+        if (doctorDTO == null || doctorDTO.getId() == null) {
+            return new JSONResult(201, "更新请求中必须包含医生ID", null);
+        }
+
+        // 2. 从数据库中获取当前的医生信息
+        Doctor existingDoctor = doctorMapper.selectById(doctorDTO.getId());
+
+        // 3. 检查医生是否存在
+        if (existingDoctor == null) {
+            return new JSONResult(202, "找不到ID为 " + doctorDTO.getId() + " 的医生信息", null);
+        }
+
+        // 4. 处理手机号更新（包含唯一性校验）
+        if (doctorDTO.getPhone() != null && !doctorDTO.getPhone().trim().isEmpty()) {
+            // 检查手机号是否真的被修改了
+            if (!doctorDTO.getPhone().equals(existingDoctor.getPhone())) {
+                // 检查这个新手机号是否已被其他账户占用
+                QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("phone_number", doctorDTO.getPhone());
+                Account accountWithNewPhone = accountMapper.selectOne(queryWrapper);
+
+                if (accountWithNewPhone != null) {
+                    return new JSONResult(203, "修改失败,该手机号已被其他用户注册", null);
+                }
+
+                // 更新医生表中的手机号
+                existingDoctor.setPhone(doctorDTO.getPhone());
+
+                // 同时更新账户表中的手机号
+                Account associatedAccount = accountMapper.selectById(existingDoctor.getAccountId());
+                if (associatedAccount != null) {
+                    associatedAccount.setPhoneNumber(doctorDTO.getPhone());
+                    accountMapper.updateById(associatedAccount);
+                }
+            }
+        }
+
+        // 5. 将DTO中的其他非空字段更新到现有医生对象中
+        if (doctorDTO.getName() != null && !doctorDTO.getName().trim().isEmpty()) {
+            existingDoctor.setName(doctorDTO.getName());
+        }
+        if (doctorDTO.getAge() != null) {
+            existingDoctor.setAge(doctorDTO.getAge());
+        }
+        if (doctorDTO.getSex() != null) {
+            existingDoctor.setSex(doctorDTO.getSex());
+        }
+        if (doctorDTO.getLevelId() != null) {
+            existingDoctor.setLevelId(doctorDTO.getLevelId());
+        }
+        if (doctorDTO.getTypeId() != null) {
+            existingDoctor.setTypeId(doctorDTO.getTypeId());
+        }
+
+        // 6. 更新修改时间
+        existingDoctor.setUpdateTime(new Date());
+
+        // 7. 将更新后的医生对象保存到数据库
+        int result = doctorMapper.updateById(existingDoctor);
+
+        // 8. 返回结果
+        if (result > 0) {
+            return new JSONResult(200, "医生信息更新成功", existingDoctor);
+        } else {
+            return new JSONResult(500, "医生信息更新失败", null);
+        }
     }
 
     @Override
