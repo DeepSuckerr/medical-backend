@@ -8,4 +8,6 @@ public interface AccountService {
     JSONResult login(AccountDTO accountDTO);
 
     JSONResult register(AccountDTO accountDTO);
+
+    JSONResult deleteAccountById(Long id);
 }

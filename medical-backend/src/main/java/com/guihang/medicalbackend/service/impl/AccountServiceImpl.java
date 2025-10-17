@@ -80,11 +80,23 @@ public class AccountServiceImpl implements AccountService {
         if ("".equals(accountDTO.getPhoneNumber()) || accountDTO.getPhoneNumber()==null) {
             return new JSONResult(204,"用户注册手机号码不能为空",null);
         }
+        // 校验手机号格式
+        String phoneRegex = "^1[3-9]\\d{9}$";
+        if (!accountDTO.getPhoneNumber().matches(phoneRegex)) {
+            return new JSONResult(208, "请输入有效的11位手机号码", null);
+        }
 
         // 检查uType是否有效
         String uType = accountDTO.getUtype();
         if (uType == null || (!"ROLE_1".equals(uType) && !"ROLE_2".equals(uType) && !"ROLE_3".equals(uType))) {
             return new JSONResult(206, "无效的用户类型", null);
+        }
+
+        // 检查手机号是否已存在
+        QueryWrapper<Account> phoneWrapper = new QueryWrapper<>();
+        phoneWrapper.eq("phone_number", accountDTO.getPhoneNumber());
+        if (accountMapper.selectOne(phoneWrapper) != null) {
+            return new JSONResult(207, "该手机号已被注册", null);
         }
 
         // 检查用户名是否已存在
@@ -116,6 +128,16 @@ public class AccountServiceImpl implements AccountService {
             return new JSONResult(200,"注册成功",account);
         } else {
             return new JSONResult(500,"注册失败",null);
+        }
+    }
+
+    @Override
+    public JSONResult deleteAccountById(Long id) {
+        int i = accountMapper.deleteById(id);
+        if (i > 0) {
+            return new JSONResult(200,"删除成功",null);
+        }else {
+            return new JSONResult(201,"删除失败",null);
         }
     }
 }

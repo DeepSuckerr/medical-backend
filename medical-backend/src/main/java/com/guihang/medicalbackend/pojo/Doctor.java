@@ -30,7 +30,7 @@ public class Doctor extends BasePojo implements Serializable {
     private String phone;
     private Integer typeId;
     private String hospital;
-    private Integer accountId;
+    private Long accountId;
 
 
 

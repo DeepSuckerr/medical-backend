@@ -42,5 +42,12 @@ public class DoctorDTO {
     @Schema(title = "账号id")
     private Integer accountId;
 
+    @Schema(title = "密码")
+    private String password;
+
+    @Schema(title = "确认密码")
+    private String confirmPassword;
+
+
 
 }
