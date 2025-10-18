@@ -41,12 +41,24 @@ public class DoctorController {
         return doctorService.addDoctor(doctorDTO);
     }
 
-    @PutMapping("/updateDoctor")
+    @PostMapping("/updateDoctor")
     @Operation(summary = "修改医生信息", description = "修改医生信息接口")
     public JSONResult updateDoctor(@RequestBody DoctorDTO doctorDTO) {
         return doctorService.UpdateDoctor(doctorDTO);
     }
 
+
+    @GetMapping("/level/getAll")
+    @Operation(summary = "获取所有医生级别信息", description = "用于在下拉框中展示医生级别")
+    public JSONResult getAllDoctorLevels() {
+        return doctorService.getAllDoctorLevels();
+    }
+
+    @GetMapping("/type/getAll")
+    @Operation(summary = "获取所有科室信息", description = "用于在下拉框中展示科室")
+    public JSONResult getAllDepartments() {
+        return doctorService.getAllDepartments();
+    }
 
 
 }

@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("department")
-public class Department {
+@TableName("doctor_level")
+public class DoctorLevel {
 
     private Integer id;
-    private String departmentName;
+    private String name;
+
 
 }

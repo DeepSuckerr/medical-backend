@@ -5,10 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.guihang.medicalbackend.commons.JSONResult;
 import com.guihang.medicalbackend.dto.DoctorDTO;
 import com.guihang.medicalbackend.mapper.AccountMapper;
+import com.guihang.medicalbackend.mapper.DepartmentMapper;
+import com.guihang.medicalbackend.mapper.DoctorLevelMapper;
 import com.guihang.medicalbackend.mapper.DoctorMapper;
 import com.guihang.medicalbackend.pojo.Account;
+import com.guihang.medicalbackend.pojo.Department;
 import com.guihang.medicalbackend.pojo.Doctor;
 import com.guihang.medicalbackend.dto.AccountDTO;
+import com.guihang.medicalbackend.pojo.DoctorLevel;
 import com.guihang.medicalbackend.service.AccountService;
 import com.guihang.medicalbackend.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,13 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    DepartmentMapper departmentMapper;
+
+    @Autowired
+    DoctorLevelMapper doctorLevelMapper;
+
 
     @Override
     public JSONResult getAllDoctor(String keyword, Integer currentPage, Integer pageSize) {
@@ -168,12 +179,12 @@ public class DoctorServiceImpl implements DoctorService {
         if (doctorDTO.getPhone() == null || "".equals(doctorDTO.getPhone().trim())) {
             return new JSONResult(203, "联系电话不能为空", null);
         }
-        if (doctorDTO.getPassword() == null || doctorDTO.getPassword().isEmpty()) {
-            return new JSONResult(208, "登录密码不能为空", null);
-        }
-        if (doctorDTO.getConfirmPassword() == null || !doctorDTO.getPassword().equals(doctorDTO.getConfirmPassword())) {
-            return new JSONResult(209, "两次输入的密码不一致", null);
-        }
+//        if (doctorDTO.getPassword() == null || doctorDTO.getPassword().isEmpty()) {
+//            return new JSONResult(208, "登录密码不能为空", null);
+//        }
+//        if (doctorDTO.getConfirmPassword() == null || !doctorDTO.getPassword().equals(doctorDTO.getConfirmPassword())) {
+//            return new JSONResult(209, "两次输入的密码不一致", null);
+//        }
 
         // 2. 准备用于注册的AccountDTO
         AccountDTO accountToRegister = new AccountDTO();
@@ -204,6 +215,18 @@ public class DoctorServiceImpl implements DoctorService {
             // 注意：这里可能需要添加事务回滚逻辑，以防医生信息保存失败但账户已创建
             return new JSONResult(500, "新增医生失败，但账户可能已创建，请检查数据", null);
         }
+    }
+
+    @Override
+    public JSONResult getAllDoctorLevels() {
+        List<DoctorLevel> doctorLevels = doctorLevelMapper.selectList(null);
+        return new JSONResult(200, "查询成功", doctorLevels);
+    }
+
+    @Override
+    public JSONResult getAllDepartments() {
+        List<Department> departments = departmentMapper.selectList(null);
+        return new JSONResult(200, "查询成功", departments);
     }
 
     private static Doctor getDoctor(DoctorDTO doctorDTO, JSONResult registerResult) {
